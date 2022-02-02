@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  xcatmn:
+    image: xcat:rocky8.4
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xcatmn
+    hostname: xcatmn
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /xcatdata:/xcatdata
+      - /var/log/xcat:/var/log/xcat
+      - /customer_data:/customer_data
+      - provisioning:/opt/provisioning
+
+volumes:
+  provisioning:
+    driver_opts:
+      type: "nfs"
+      o: "nfsvers=3,addr=10.10.2.11,nolock,soft,rw"
+      device: ":/mnt/pool1/provisioning"
+

@@ -53,6 +53,9 @@ RUN systemctl enable httpd && \
     systemctl enable rsyslog && \
     systemctl enable xcatd
 
+# Copy our edited genimage
+COPY ./opt/xcat/share/xcat/netboot/rh/genimage /opt/xcat/share/xcat/netboot/rh/genimage
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
