@@ -20,6 +20,12 @@ if [[ -d "/xcatdata.NEEDINIT"  ]]; then
     echo "regenerating certificates..."
     xcatconfig -c
 
+    echo "reconfiguring network services..."
+    makehosts
+    makedns
+    makedhcp -n
+    makedhcp -a
+
     echo "create symbol link for /root/.xcat..."
     rsync -a /root/.xcat/* /xcatdata/.xcat
     rm -rf /root/.xcat/
