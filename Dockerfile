@@ -34,10 +34,11 @@ RUN dnf install -y -q wget which \
        man \
        nano \
        pigz \
-       screen \
        bash-completion \
        vim \
        epel-release \
+    && dnf install -y \
+       screen \
     && dnf clean all 
 
 RUN sed -i -e 's|#PermitRootLogin yes|PermitRootLogin yes|g' \

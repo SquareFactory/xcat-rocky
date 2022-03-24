@@ -17,6 +17,9 @@ if [[ -d "/xcatdata.NEEDINIT"  ]]; then
     xcatconfig -i
     XCATBYPASS=1 tabdump site|grep domain || XCATBYPASS=1 chtab key=domain site.value=example.com
 
+    echo "regenerating certificates..."
+    xcatconfig -c
+
     echo "create symbol link for /root/.xcat..."
     rsync -a /root/.xcat/* /xcatdata/.xcat
     rm -rf /root/.xcat/

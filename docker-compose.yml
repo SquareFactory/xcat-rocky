@@ -9,8 +9,8 @@ services:
       dockerfile: Dockerfile
     container_name: xcatmn
     hostname: xcatmn
-    privileged: true
-    #network_mode: host
+    #privileged: true
+    network_mode: host
     ports:
       - 3001:3001/tcp
       - 3001:3001/udp
@@ -46,6 +46,11 @@ services:
       - /var/log/xcat:/var/log/xcat
       - /customer_data:/customer_data
       - provisioning:/opt/provisioning
+    cap_add:
+      - CAP_SYS_ADMIN
+      - NET_ADMIN
+    #networks:
+    #  - xcat_net
 
 volumes:
   provisioning:
@@ -53,4 +58,10 @@ volumes:
       type: "nfs"
       o: "nfsvers=3,addr=10.10.2.11,nolock,soft,rw"
       device: ":/mnt/pool1/provisioning"
+
+#networks:
+#  xcat_net:
+#    ipam:
+#      config:
+#        - subnet: 172.177.0.0/16
 
