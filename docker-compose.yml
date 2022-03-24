@@ -10,6 +10,36 @@ services:
     container_name: xcatmn
     hostname: xcatmn
     privileged: true
+    #network_mode: host
+    ports:
+      - 3001:3001/tcp
+      - 3001:3001/udp
+      - 3002:3002/tcp
+      - 3002:3002/udp
+      #- 3003:3003/tcp
+      - 7:7/udp
+      - 873:873/tcp
+      - 873:873/udp
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 67:67/tcp
+      - 68:68/tcp
+      - 68:68/udp
+      - 69:69/tcp
+      - 69:69/udp
+      - 80:80/tcp
+      - 80:80/udp
+      - 111:111/udp
+      - 514:514/tcp
+      - 514:514/udp
+      - 4011:4011/tcp
+      - 623:623/tcp
+      - 623:623/udp
+      #- 2049:2049/tcp
+      #- 2049:2049/udp
+      - 2200:2200/tcp
+      - 2200:2200/udp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /xcatdata:/xcatdata

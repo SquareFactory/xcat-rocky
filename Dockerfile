@@ -21,10 +21,10 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; \
 RUN mkdir -p /xcatdata/etc/{dhcp,goconserver,xcat} && ln -sf -t /etc /xcatdata/etc/{dhcp,goconserver,xcat} && \
     mkdir -p /xcatdata/{install,tftpboot} && ln -sf -t / /xcatdata/{install,tftpboot}
 
-RUN yum install -y -q wget which &&\
-    wget ${xcat_reporoot}/${xcat_version}/$([[ "devel" = "${xcat_version}" ]] && echo 'core-snap' || echo 'xcat-core')/xcat-core.repo -O /etc/yum.repos.d/xcat-core.repo && \
-    wget ${xcat_reporoot}/${xcat_version}/xcat-dep/${xcat_baseos}/$(uname -m)/xcat-dep.repo -O /etc/yum.repos.d/xcat-dep.repo && \
-    yum install -y \
+RUN dnf install -y -q wget which \
+    && wget ${xcat_reporoot}/${xcat_version}/$([[ "devel" = "${xcat_version}" ]] && echo 'core-snap' || echo 'xcat-core')/xcat-core.repo -O /etc/yum.repos.d/xcat-core.repo \
+    && wget ${xcat_reporoot}/${xcat_version}/xcat-dep/${xcat_baseos}/$(uname -m)/xcat-dep.repo -O /etc/yum.repos.d/xcat-dep.repo \
+    && dnf install -y \
        xCAT \
        openssh-server \
        rsyslog \
@@ -34,10 +34,11 @@ RUN yum install -y -q wget which &&\
        man \
        nano \
        pigz \
-       epel-release 
-
-RUN yum install -y -q screen && \
-    yum clean all
+       screen \
+       bash-completion \
+       vim \
+       epel-release \
+    && dnf clean all 
 
 RUN sed -i -e 's|#PermitRootLogin yes|PermitRootLogin yes|g' \
            -e 's|#Port 22|Port 2200|g' \

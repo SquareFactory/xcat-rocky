@@ -1,5 +1,4 @@
-#! /bin/bash
-
+#!/bin/bash
 is_ubuntu=$(test -f /etc/debian_version && echo Y)
 [[ -z ${is_ubuntu} ]] && logadm="root:" || logadm="syslog:adm"
 chown -R ${logadm} /var/log/xcat/
@@ -43,4 +42,5 @@ echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
 systemctl start xcatd
 #exec /sbin/init
+rm -f /etc/nologin /var/run/nologin
 
