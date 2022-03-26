@@ -7,8 +7,10 @@ ps -ax
 if [[ -d "/xcatdata.NEEDINIT" ]]; then
     echo "initializing xCAT ..."
     if [ ! -f "/xcatdata/.init-finished" ]; then
+        echo "first initalization, copying template..."
         rsync -a /xcatdata.NEEDINIT/ /xcatdata
 
+        echo "initalizing database."
         xcatconfig --database
 
         touch /xcatdata/.init-finished
