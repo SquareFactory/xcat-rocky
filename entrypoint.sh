@@ -8,17 +8,18 @@ if [[ -d "/xcatdata.NEEDINIT"  ]]; then
     echo "initializing xCAT ..."
     if [ ! -f "/xcatdata/.init-finished" ]; then
         rsync -a /xcatdata.NEEDINIT/ /xcatdata
+
+        xcatconfig --database
+
+        touch /xcatdata/.init-finished
     fi
-    mv /xcatdata.NEEDINIT /xcatdata.orig
-
-    xcatconfig -d
-
-    echo "initializing networks table..."
-    xcatconfig -i
+    
+    echo "initializing networks table if necessary..."
+    xcatconfig --updateinstall
     XCATBYPASS=1 tabdump site|grep domain || XCATBYPASS=1 chtab key=domain site.value=example.com
 
-    echo "regenerating certificates..."
-    xcatconfig -c
+    #echo "regenerating certificates..."
+    #xcatconfig --credentials
 
     echo "reconfiguring network services..."
     makehosts
@@ -39,7 +40,7 @@ if [[ -d "/xcatdata.NEEDINIT"  ]]; then
     done
     # workaround for missing `switch_macmap` (#13)
     ln -sf /opt/xcat/bin/xcatclient /opt/xcat/probe/subcmds/bin/switchprobe
-    touch /xcatdata/.init-finished
+    mv /xcatdata.NEEDINIT /xcatdata.orig
 fi
 
 cat /etc/motd
