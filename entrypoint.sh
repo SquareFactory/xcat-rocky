@@ -43,10 +43,13 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
         chmod 600 /xcatdata/.ssh/*
     fi
 
-    echo "reconfiguring network services..."
+    echo "reconfiguring hosts..."
     makehosts
+    echo "reconfiguring dns..."
     makedns
+    echo "reconfiguring dhcd config..."
     makedhcp -n
+    echo "reconfiguring dhcd leases..."
     makedhcp -a
 
     echo "initializing loop devices..."
