@@ -47,9 +47,9 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
     makehosts
     echo "reconfiguring dns..."
     makedns
-    echo "reconfiguring dhcd config..."
+    echo "reconfiguring dhcpd config..."
     makedhcp -n
-    echo "reconfiguring dhcd leases..."
+    echo "reconfiguring dhcpd leases..."
     makedhcp -a
 
     echo "initializing loop devices..."
