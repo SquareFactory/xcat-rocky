@@ -34,7 +34,7 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
         rsync -a /xcatdata/.ssh/ /root/.ssh/
         chmod 600 /root/.ssh/*
     else
-        echo "backup keys to /root/.ssh..."
+        echo "backup keys to /xcatdata/.ssh..."
         mkdir -p /xcatdata/.ssh
         rsync -a /root/.ssh/ /xcatdata/.ssh/
         chmod 600 /xcatdata/.ssh/*
