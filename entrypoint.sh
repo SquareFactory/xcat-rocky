@@ -23,7 +23,7 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
     if ! [ -L /root/.xcat ]; then
         if ! [ -d /xcatdata/.xcat ]; then
             echo "backup data not found, regenerating certificates and copying..."
-            yes | opt/xcat/share/xcat/scripts/setup-local-client.sh
+            xcatconfig -c
             rsync -a /root/.xcat/* /xcatdata/.xcat
         fi
         echo "create symbol link for /root/.xcat..."
