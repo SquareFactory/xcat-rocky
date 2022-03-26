@@ -21,7 +21,7 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
     if ! [ -L /root/.xcat ]; then
         if ! [ -d /xcatdata/.xcat ]; then
             echo "backup data not found, regenerating certificates and copying..."
-            /opt/xcat/share/xcat/scripts/setup-local-client.sh
+            yes | opt/xcat/share/xcat/scripts/setup-local-client.sh
             rsync -a /root/.xcat/* /xcatdata/.xcat
         fi
         echo "create symbol link for /root/.xcat..."
@@ -34,7 +34,8 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
         rsync -a /xcatdata/.ssh/ /root/.ssh/
         chmod 600 /root/.ssh/*
     else
-        echo "backup keys to /xcatdata/.ssh..."
+        echo "backup keys not found, copying keys to /xcatdata/.ssh..."
+        xcatconfig --sshkeys
         mkdir -p /xcatdata/.ssh
         rsync -a /root/.ssh/ /xcatdata/.ssh/
         chmod 600 /xcatdata/.ssh/*
