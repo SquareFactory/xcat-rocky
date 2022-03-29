@@ -19,7 +19,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: false
-          tags: csquare-ai/xcat-rocky:latest
+          tags: squarefactory/xcat-rocky:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -46,8 +46,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/csquare-ai/xcat-rocky:latest
-            ghcr.io/csquare-ai/xcat-rocky:${{ steps.get_version.outputs.VERSION }}
+            ghcr.io/squarefactory/xcat-rocky:latest
+            ghcr.io/squarefactory/xcat-rocky:${{ steps.get_version.outputs.VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
