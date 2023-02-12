@@ -1,16 +1,23 @@
-FROM quay.io/rockylinux/rockylinux:8.4
+FROM rockylinux/rockylinux:9
 
 LABEL MAINTAINER Square Factory
 
 ENV container docker
 
-ARG xcat_version=latest
+ARG xcat_version=devel
 ARG xcat_reporoot=https://xcat.org/files/xcat/repos/yum
-ARG xcat_baseos=rh8
+ARG xcat_baseos=rh9
 
-RUN (cd /lib/systemd/system/sysinit.target.wants/; \
-    for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-    rm -f /lib/systemd/system/multi-user.target.wants/* \
+RUN dnf update -y \
+    && dnf install -y \
+    systemd \
+    epel-release \
+    && dnf config-manager --set-enabled crb \
+    && dnf clean all
+
+RUN (cd /lib/systemd/system/sysinit.target.wants/ \
+    && for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done) \
+    && rm -f /lib/systemd/system/multi-user.target.wants/* \
     && rm -f /etc/systemd/system/*.wants/* \
     && rm -f /lib/systemd/system/local-fs.target.wants/* \
     && rm -f /lib/systemd/system/sockets.target.wants/*udev* \
@@ -25,6 +32,8 @@ RUN dnf install -y -q wget which \
     && wget ${xcat_reporoot}/${xcat_version}/$([[ "devel" = "${xcat_version}" ]] && echo 'core-snap' || echo 'xcat-core')/xcat-core.repo -O /etc/yum.repos.d/xcat-core.repo \
     && wget ${xcat_reporoot}/${xcat_version}/xcat-dep/${xcat_baseos}/$(uname -m)/xcat-dep.repo -O /etc/yum.repos.d/xcat-dep.repo \
     && dnf install -y \
+    screen \
+    bind-utils \
     xCAT \
     openssh-server \
     rsyslog \
@@ -36,10 +45,6 @@ RUN dnf install -y -q wget which \
     pigz \
     bash-completion \
     vim \
-    epel-release \
-    && dnf install -y \
-    screen \
-    bind-utils \
     && dnf clean all
 
 RUN sed -i -e 's|#PermitRootLogin yes|PermitRootLogin yes|g' \
@@ -50,23 +55,19 @@ RUN sed -i -e 's|#PermitRootLogin yes|PermitRootLogin yes|g' \
     && rm -rf /root/.ssh \
     && mv /xcatdata /xcatdata.NEEDINIT
 
+COPY xcat-init.bash /xcat-init.bash
+COPY xcat-init.service /etc/systemd/system/xcat-init.service
+RUN chmod 700 /xcat-init.bash
+
 RUN systemctl enable httpd \
     && systemctl enable sshd \
     && systemctl enable dhcpd \
     && systemctl enable rsyslog \
-    && systemctl enable xcatd
-
-# Copy our edited genimage
-COPY ./opt/xcat/share/xcat/netboot/rh/genimage /opt/xcat/share/xcat/netboot/rh/genimage
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-COPY startup.sh /startup.sh
-RUN chmod +x /startup.sh
+    && systemctl enable xcatd \
+    && systemctl enable xcat-init
 
 ENV XCATROOT /opt/xcat
 ENV PATH="$XCATROOT/bin:$XCATROOT/sbin:$XCATROOT/share/xcat/tools:$PATH" MANPATH="$XCATROOT/share/man:$MANPATH"
 VOLUME [ "/xcatdata", "/var/log/xcat" ]
 
-CMD [ "/startup.sh" ]
+ENTRYPOINT ["/usr/sbin/init"]

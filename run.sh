@@ -1,11 +1,11 @@
 #/bin/env bash
-sudo docker run -d \
+podman run -d \
      --name xcatmn  \
-     --network=host  \
-     --hostname xcatmn \
      --privileged   \
+     --cgroupns private \
+     --cgroup-manager=cgroupfs \
      -v /sys/fs/cgroup:/sys/fs/cgroup:ro  \
-     -v /xcatdata:/xcatdata     \
-     -v /var/log/xcat:/var/log/xcat  \
-     -v /customer_data:/customer_data   \
-     xcat:rocky8.4
+     -v ./xcatdata:/xcatdata     \
+     -v ./logs:/var/log  \
+     -v ./customer_data:/customer_data   \
+     ghcr.io/squarefactory/xcat-rocky:0.2.0-xcat2.16.3-rocky8.4

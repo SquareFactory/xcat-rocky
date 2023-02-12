@@ -18,6 +18,7 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
 
     echo "initializing networks table if necessary..."
     xcatconfig --updateinstall
+    systemctl stop xcatd
     XCATBYPASS=1 tabdump site | grep domain || XCATBYPASS=1 chtab key=domain site.value=example.com
 
     if ! [ -L /root/.xcat ]; then
@@ -69,6 +70,5 @@ echo "welcome to Dockerized xCAT, please login with"
 [[ -n "$HOSTIPS" ]] && for i in $HOSTIPS; do echo "   ssh root@$i -p 2200  "; done && echo "The initial password is \"cluster\""
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
-systemctl start xcatd
 #exec /sbin/init
 rm -f /etc/nologin /var/run/nologin

@@ -1,0 +1,13 @@
+[Unit]
+Description=xCAT init script
+After=network-online.target
+Wants=network-online.target
+Before=xcatd.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/xcat-init.bash
+
+[Install]
+WantedBy=multi-user.target
