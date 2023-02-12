@@ -2,6 +2,8 @@ FROM ghcr.io/squarefactory/xcat-rocky:0.1.3-xcat2.16.3-rocky8.4 as build
 
 FROM scratch
 
+ENV container docker
+
 COPY --from=build / /
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -16,7 +18,18 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
 COPY xcat-init.bash /xcat-init.bash
 RUN chmod 700 /xcat-init.bash
 COPY xcat-init.service /etc/systemd/system/xcat-init.service
-RUN systemctl enable xcat-init
+
+RUN systemctl enable httpd \
+    && systemctl enable sshd \
+    && systemctl enable dhcpd \
+    && systemctl enable rsyslog \
+    && systemctl enable xcatd \
+    && systemctl enable xcat-init
+
+ENV XCATROOT /opt/xcat
+ENV PATH="$XCATROOT/bin:$XCATROOT/sbin:$XCATROOT/share/xcat/tools:$PATH" MANPATH="$XCATROOT/share/man:$MANPATH"
+
+VOLUME [ "/xcatdata" ]
 
 ENTRYPOINT ["/sbin/init"]
 

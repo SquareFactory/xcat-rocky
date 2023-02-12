@@ -8,4 +8,4 @@ podman run -d \
      -v ./xcatdata:/xcatdata     \
      -v ./logs:/var/log  \
      -v ./customer_data:/customer_data   \
-     ghcr.io/squarefactory/xcat-rocky:0.2.0-xcat2.16.3-rocky8.4
+     ghcr.io/squarefactory/xcat-rocky:0.2.1-xcat2.16.3-rocky8.4

@@ -18,7 +18,6 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
 
     echo "initializing networks table if necessary..."
     xcatconfig --updateinstall
-    systemctl stop xcatd
     XCATBYPASS=1 tabdump site | grep domain || XCATBYPASS=1 chtab key=domain site.value=example.com
 
     if ! [ -L /root/.xcat ]; then
@@ -62,6 +61,9 @@ if [[ -d "/xcatdata.NEEDINIT" ]]; then
     ln -sf /opt/xcat/bin/xcatclient /opt/xcat/probe/subcmds/bin/switchprobe
     mv /xcatdata.NEEDINIT /xcatdata.orig
 fi
+
+# Stop xcat and let systemd do its job
+systemctl restart --no-block xcatd
 
 cat /etc/motd
 HOSTIPS=$(ip -o -4 addr show up | grep -v "\<lo\>" | xargs -I{} expr {} : ".*inet \([0-9.]*\).*")
